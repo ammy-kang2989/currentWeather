@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">MyWeatherApp</string>
+    <string name="weather">WEATHER</string>
+    <string name="enter_city_name">Enter city name</string>
+    <string name="search">Search</string>
+    <string name="pressure">Pressure:</string>
+    <string name="wind_speed">Wind Speed:</string>
+    <string name="wind_degree">Wind Degree:</string>
+    <string name="humidity">Humidity:</string>
 </resources>

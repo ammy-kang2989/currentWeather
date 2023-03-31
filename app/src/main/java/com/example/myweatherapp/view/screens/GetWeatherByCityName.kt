@@ -34,8 +34,8 @@ class GetWeatherByCityName : AppCompatActivity() {
             it.let {
                 Log.e("TAG", "getWeather: ${it.data?.weather?.size} " )
                 Log.e("TAG", "getWeather: ${it.data?.name} " )
-            }
 
+            }
 
         }
 

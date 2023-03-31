@@ -7,6 +7,6 @@ import retrofit2.http.QueryMap
 
 interface ApiService {
 
-    @GET()
+    @GET("/data/2.5/weather")
     suspend fun getWeatherByCityName(@QueryMap options :  Map<String, String> ): Response<GetByCityNameResponse>
 }

@@ -21,5 +21,9 @@ data class Weather(
     val icon: String,
     val id: Int,
     val main: String
-)
+){
+    fun getIconLink() : String {
+        return "https://openweathermap.org/img/w/$icon.png"
+    }
+}
 

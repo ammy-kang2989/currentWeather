@@ -1,23 +1,72 @@
 package com.example.myweatherapp.view.screens
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import com.example.myweatherapp.R
+import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
+import com.example.myweatherapp.databinding.ActivityGetWeatherByCityNameBinding
+import com.example.myweatherapp.utils.Constants
+import com.example.myweatherapp.utils.Resource
+import com.example.myweatherapp.utils.TempUnitConverter
 import com.example.myweatherapp.viewModel.GetWeatherByCityNameViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import androidx.activity.viewModels
-import com.example.myweatherapp.utils.Constants
 
 @AndroidEntryPoint
 class GetWeatherByCityName : AppCompatActivity() {
 
     private val viewModel: GetWeatherByCityNameViewModel by viewModels()
 
+    lateinit var binding: ActivityGetWeatherByCityNameBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_get_weather_by_city_name)
+        binding = ActivityGetWeatherByCityNameBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         getWeather()
+        init()
+
+    }
+
+    private fun init() {
+        binding.activity = this
+        binding.viewModel = viewModel
+        initObserver()
+    }
+
+    private fun initObserver() {
+        viewModel.getWeatherByCityNameMutableLiveData
+            .observe(this) { getByCityNameResponse ->
+
+                when (getByCityNameResponse) {
+                    is Resource.Success -> {
+
+                        Log.e("TAG", "getWeather: Success response here")
+                        binding.getWeatherResponse = getByCityNameResponse.data
+
+                    }
+
+                    is Resource.Loading -> {
+
+                        Log.e("TAG", "getWeather: Loading.....")
+                    }
+
+                    is Resource.Error -> {
+
+                        //Log.e("TAG", "getWeather: error is${getByCityNameResponse.data.}" )
+                        Log.e(
+                            "TAG",
+                            "getWeather: error response here ${getByCityNameResponse.message}"
+                        )
+                    }
+
+                    else -> {
+
+                    }
+                }
+
+
+            }
+
     }
 
     private fun getWeather() {
@@ -28,19 +77,15 @@ class GetWeatherByCityName : AppCompatActivity() {
             this["appid"] = Constants.KEY
         }
 
-
-        viewModel.getWeatherByCityNameMutableLiveData.observe(this) {
-
-            it.let {
-                Log.e("TAG", "getWeather: ${it.data?.weather?.size} " )
-                Log.e("TAG", "getWeather: ${it.data?.name} " )
-
-            }
-
-        }
-
         viewModel.getCurrentWeatherByName(map)
 
+    }
+
+    fun getTempSymbol(temp : String) : String {
+        return TempUnitConverter.convertToCelsius(temp).toString().also {
+            "degree "
+
+        }
     }
 }
 

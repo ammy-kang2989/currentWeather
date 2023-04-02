@@ -7,21 +7,18 @@
 
         <variable
             name="viewModel"
-            type="com.example.myweatherapp.viewModel.GetWeatherByCityNameViewModel" />
+            type="com.example.myweatherapp.viewModel.WeatherInfoViewModel" />
 
         <variable
             name="activity"
-            type="com.example.myweatherapp.view.screens.GetWeatherByCityName" />
+            type="com.example.myweatherapp.view.screens.WeatherInfoActivity" />
 
-        <variable
-            name="getWeatherResponse"
-            type="com.example.myweatherapp.models.getByName.GetByCityNameResponse" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".view.screens.GetWeatherByCityName">
+        tools:context=".view.screens.WeatherInfoActivity">
 
         <androidx.cardview.widget.CardView
             android:id="@+id/card1"
@@ -43,15 +40,16 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:hint="@string/enter_city_name"
-                    app:layout_constraintEnd_toStartOf="@+id/tvSearch"
+                    app:layout_constraintEnd_toStartOf="@+id/btnSearch"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/tvSearch"
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btnSearch"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="10dp"
+                    android:onClick="@{()->activity.searchButtonClick()}"
                     android:text="@string/search"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -90,7 +88,7 @@
                     android:orientation="horizontal">
 
                     <androidx.appcompat.widget.AppCompatImageView
-                        imageUrl="@{getWeatherResponse.weather.get(0).getIconLink()}"
+                        imageUrl="@{activity.getByCityNameResponseObservableField.weather.get(0).getIconLink()}"
                         android:id="@+id/weatherIcon"
                         android:layout_width="68dp"
                         android:layout_height="68dp"
@@ -116,7 +114,7 @@
                                 android:id="@+id/location"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@{getWeatherResponse.name}"
+                                android:text="@{activity.getByCityNameResponseObservableField.name}"
                                 android:layout_gravity="end"
                                 android:gravity="end"
                                 android:textColor="@color/black"
@@ -127,7 +125,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="2dp"
-                                android:text="@{getWeatherResponse.weather.get(0).main}"
+                                android:text="@{activity.getByCityNameResponseObservableField.weather.get(0).main}"
                                 android:textSize="15sp" />
 
                             <androidx.appcompat.widget.AppCompatTextView
@@ -174,7 +172,7 @@
                         android:textSize="15sp" />
 
                     <androidx.appcompat.widget.AppCompatTextView
-                        android:text="@{String.valueOf(getWeatherResponse.main.humidity)}"
+                        android:text="@{String.valueOf(activity.getByCityNameResponseObservableField.main.humidity)}"
                         app:layout_constraintTop_toTopOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         android:id="@+id/tvHumidity"
@@ -194,7 +192,7 @@
                         android:textSize="15sp" />
 
                     <androidx.appcompat.widget.AppCompatTextView
-                        android:text="@{String.valueOf(getWeatherResponse.main.pressure)}"
+                        android:text="@{String.valueOf(activity.getByCityNameResponseObservableField.main.pressure)}"
                         android:id="@+id/tvPressure"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -213,7 +211,7 @@
                         android:textSize="15sp" />
 
                     <androidx.appcompat.widget.AppCompatTextView
-                        android:text="@{String.valueOf(getWeatherResponse.wind.speed)}"
+                        android:text="@{String.valueOf(activity.getByCityNameResponseObservableField.wind.speed)}"
                         android:id="@+id/tvWind"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -233,7 +231,7 @@
                         android:textSize="15sp" />
 
                     <androidx.appcompat.widget.AppCompatTextView
-                        android:text="@{String.valueOf(getWeatherResponse.wind.deg)}"
+                        android:text="@{String.valueOf(activity.getByCityNameResponseObservableField.wind.deg)}"
                         android:id="@+id/tvWindDeg"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

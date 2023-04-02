@@ -16,7 +16,7 @@
         android:theme="@style/Theme.MyWeatherApp"
         tools:targetApi="31">
         <activity
-            android:name=".view.screens.GetWeatherByCityName"
+            android:name=".view.screens.WeatherInfoActivity"
             android:exported="false" />
         <activity
             android:name=".view.screens.SplashActivity"

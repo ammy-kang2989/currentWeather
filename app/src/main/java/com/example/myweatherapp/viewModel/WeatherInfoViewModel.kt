@@ -3,12 +3,10 @@ package com.example.myweatherapp.viewModel
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
 import com.example.myweatherapp.models.getByName.GetByCityNameResponse
 import com.example.myweatherapp.models.getByName.errorResponse.ErrorResponse
 import com.example.myweatherapp.repository.MainRepository
-import com.example.myweatherapp.utils.Constants
 import com.example.myweatherapp.utils.Resource
 import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,13 +16,12 @@ import java.io.IOException
 import javax.inject.Inject
 
 @HiltViewModel
-class GetWeatherByCityNameViewModel @Inject constructor(
+class WeatherInfoViewModel @Inject constructor(
     private var mainRepository: MainRepository
 ) : ViewModel() {
 
     val getWeatherByCityNameMutableLiveData: MutableLiveData<Resource<GetByCityNameResponse>> =
         MutableLiveData()
-    var getByCityNameResponse: GetByCityNameResponse? = null
 
     fun getCurrentWeatherByName(options: HashMap<String, String>) = viewModelScope.launch {
         getWeatherInfo(options)
@@ -55,9 +52,7 @@ class GetWeatherByCityNameViewModel @Inject constructor(
     private fun handleResponse(response: Response<GetByCityNameResponse>): Resource<GetByCityNameResponse> {
         if (response.isSuccessful) {
             response.body()?.let { resultResponse ->
-                if (getByCityNameResponse == null)
-                    getByCityNameResponse = resultResponse
-                return Resource.Success(getByCityNameResponse ?: resultResponse)
+                return Resource.Success(resultResponse)
             }
         }
         return Resource.Error(response.message())

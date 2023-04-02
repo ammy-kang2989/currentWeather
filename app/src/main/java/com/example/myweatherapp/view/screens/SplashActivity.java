@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 
-import com.example.myweatherapp.MainActivity;
 import com.example.myweatherapp.R;
 
 @SuppressLint("CustomSplashScreen")
@@ -19,7 +18,7 @@ public class SplashActivity extends AppCompatActivity {
         setContentView(R.layout.activity_splash);
 
         new Handler().postDelayed(() -> {
-            Intent intent = new Intent(this, GetWeatherByCityName.class);
+            Intent intent = new Intent(this, WeatherInfoActivity.class);
             startActivity(intent);
             finish();
         }, 3000);

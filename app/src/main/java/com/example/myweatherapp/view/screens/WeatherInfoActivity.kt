@@ -7,13 +7,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.ObservableField
 import com.example.myweatherapp.databinding.ActivityGetWeatherByCityNameBinding
 import com.example.myweatherapp.models.getByName.GetByCityNameResponse
-import com.example.myweatherapp.utils.Constants
-import com.example.myweatherapp.utils.Resource
-import com.example.myweatherapp.utils.TempUnitConverter
+import com.example.myweatherapp.utils.*
 import com.example.myweatherapp.viewModel.WeatherInfoViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlin.collections.HashMap
-import kotlin.math.roundToInt
 
 @AndroidEntryPoint
 class WeatherInfoActivity : AppCompatActivity() {
@@ -41,10 +37,11 @@ class WeatherInfoActivity : AppCompatActivity() {
     }
 
     fun searchButtonClick() {
-        if (binding.etCity.text != null) {
+        if (!binding.etCity.text.toString().isNullOrEmpty() ) {
             getWeather(binding.etCity.text.toString())
+            hideKeyboard(binding.etCity)
         } else {
-
+            showToastMessage("Please enter city name")
         }
 
     }
@@ -61,31 +58,30 @@ class WeatherInfoActivity : AppCompatActivity() {
                         binding.temp.text = getTempSymbol(
                             getByCityNameResponseObservableField.get()!!.main.temp
                         )
+                        hideProgress()
                     }
 
                     is Resource.Loading -> {
+                        showProgressExtension()
                         setWeatherCardVisibility(false)
+
                     }
 
                     is Resource.Error -> {
+                        hideProgress()
                         setWeatherCardVisibility(false)
+                        showToastMessage(getByCityNameResponse.message!!)
                     }
 
-                    else -> {
-
-                    }
                 }
-
-
             }
-
     }
 
 
     private fun getWeather(cityName: String) {
         val map = HashMap<String, String>().apply {
-            this["q"] = cityName
-            this["appid"] = Constants.KEY
+            this[Constants.QUERY] = cityName
+            this[Constants.API_KEY] = Constants.KEY
         }
         viewModel.getCurrentWeatherByName(map)
     }
@@ -98,8 +94,11 @@ class WeatherInfoActivity : AppCompatActivity() {
     }
 
     private fun getTempSymbol(temp: Double): String {
-        return TempUnitConverter.convertToCelsius(temp.roundToInt().toString())
-            .toString()
+
+        return String.format(
+            "%.2f", TempUnitConverter
+                .convertToCelsius(temp.toString())
+        )
     }
 }
 

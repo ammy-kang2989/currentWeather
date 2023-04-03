@@ -8,9 +8,10 @@ import com.example.myweatherapp.models.getByName.GetByCityNameResponse
 import com.example.myweatherapp.models.getByName.errorResponse.ErrorResponse
 import com.example.myweatherapp.repository.MainRepository
 import com.example.myweatherapp.utils.Resource
+import com.example.myweatherapp.utils.TempUnitConverter
 import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.*
+import kotlinx.coroutines.launch
 import retrofit2.Response
 import java.io.IOException
 import javax.inject.Inject
@@ -64,6 +65,14 @@ class WeatherInfoViewModel @Inject constructor(
             return result.message
         }
         return ""
+    }
+
+    fun getTempSymbol(temp: Double): String {
+
+        return String.format(
+            "%.2f", TempUnitConverter
+                .convertToCelsius(temp.toString())
+        )
     }
 
 }

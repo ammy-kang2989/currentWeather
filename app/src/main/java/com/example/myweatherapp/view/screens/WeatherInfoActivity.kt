@@ -21,6 +21,8 @@ class WeatherInfoActivity : AppCompatActivity() {
     var getByCityNameResponseObservableField: ObservableField<GetByCityNameResponse> =
         ObservableField()
 
+    private lateinit var prefHelper: SharedPreferenceHelper
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityGetWeatherByCityNameBinding.inflate(layoutInflater)
@@ -32,12 +34,14 @@ class WeatherInfoActivity : AppCompatActivity() {
         binding.activity = this
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
+        prefHelper = SharedPreferenceHelper(this)
         initObserver()
         setWeatherCardVisibility(false)
+        getSavedCityName()
     }
 
     fun searchButtonClick() {
-        if (!binding.etCity.text.toString().isNullOrEmpty() ) {
+        if (!binding.etCity.text.toString().isNullOrEmpty()) {
             getWeather(binding.etCity.text.toString())
             hideKeyboard(binding.etCity)
         } else {
@@ -55,9 +59,10 @@ class WeatherInfoActivity : AppCompatActivity() {
                         setWeatherCardVisibility(true)
                         binding.weatherCard.visibility = View.VISIBLE
                         getByCityNameResponseObservableField.set(getByCityNameResponse.data)
-                        binding.temp.text = getTempSymbol(
+                        binding.temp.text = viewModel.getTempSymbol(
                             getByCityNameResponseObservableField.get()!!.main.temp
                         )
+                        saveCityName(binding.etCity.text.toString())
                         hideProgress()
                     }
 
@@ -93,12 +98,16 @@ class WeatherInfoActivity : AppCompatActivity() {
             binding.weatherCard.visibility = View.GONE
     }
 
-    private fun getTempSymbol(temp: Double): String {
+    private fun saveCityName(cityName: String) {
+        prefHelper.putValue(Constants.CITY_NAME_KEY, cityName)
+    }
 
-        return String.format(
-            "%.2f", TempUnitConverter
-                .convertToCelsius(temp.toString())
-        )
+    private fun getSavedCityName() {
+        val cityName = prefHelper.getValue(Constants.CITY_NAME_KEY).toString()
+        if (!cityName.isNullOrEmpty()) {
+            getWeather(cityName)
+        }
+
     }
 }
 
